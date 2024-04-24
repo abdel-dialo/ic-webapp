@@ -16,12 +16,12 @@ pipeline {
             
             steps {
                 sh 'docker build -t  $DOCKERHUB_ID/$IMAGE_NAME:$TAG_NAME .'
-                sh 'docker rm -f  $IMAGE_NAME'
+                sh 'docker rm -f  $CONTAINER_NAME'
             }
         }
         stage('Test') {
             steps {
-                sh 'docker run -dti  --name $CONTAINER_NAME   -p 80:80  $DOCKERHUB_ID/$IMAGE_NAME:$TAG_NAME'
+                sh 'docker run -dti  --name $CONTAINER_NAME   -p 8000:8000  $DOCKERHUB_ID/$IMAGE_NAME:$TAG_NAME'
                 sh 'sleep 5'
                 sh 'curl -I http://172.17.0.1'
         
@@ -43,7 +43,50 @@ pipeline {
                 '''
             }
         }
+        stage('deploy staging and test') {          
+            steps {
+              withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_access', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                dir('staging') {
+                sh '''
+                terraform init \
+                  -var-file="env_staging.tfvars" \
+                  -var  ssh_key_file="${SSH_PRIVATE_KEY}"
+                terraform plan \
+                  -var-file="env_staging.tfvars" \
+                  -var  ssh_key_file="${SSH_PRIVATE_KEY}"
+                terraform apply -auto-approve \
+                  -var-file="env_staging.tfvars" \
+                  -var  ssh_key_file="${SSH_PRIVATE_KEY}"
+                export STAGING_SERVER=$(awk '/PUBLIC_IP/ {sub(/^.* *PUBLIC_IP/,""); print $2}' infos_ec2.txt)
+                '''
+                }
+              }
+            }
+        }
+        stage('deploy prod and test') {
+           
+            steps {
+              withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_access', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                dir ('prod') {
+                sh '''
+                terraform init \
+                  -var-file="env_prod.tfvars" \
+                  -var  ssh_key_file="${SSH_PRIVATE_KEY}"
+                terraform plan \
+                  -var-file="env_prod.tfvars" \
+                  -var  ssh_key_file="${SSH_PRIVATE_KEY}"
+                terraform apply -auto-approve \
+                  -var-file="env_prod.tfvars" \
+                  -var  ssh_key_file="${SSH_PRIVATE_KEY}"
+                export PROD_SERVER=$(awk '/PUBLIC_IP/ {sub(/^.* *PUBLIC_IP/,""); print $2}' infos_ec2.txt)
+                '''
+                }
+              }
+        
+            }
+        }    
        
-    }    
+    }
+
 }
     
