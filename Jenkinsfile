@@ -63,6 +63,19 @@ pipeline {
               }
             }
         }
+        stage('destroy staging') {          
+            steps {
+              withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_access', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                dir('staging') {
+                sh '''
+                terraform destroy -auto-approve \
+                  -var-file="env_staging.tfvars" \
+                  -var  ssh_key_file="${SSH_PRIVATE_KEY}"
+                '''
+                }
+              }
+            }
+        }
         stage('deploy prod and test') {
            
             steps {
