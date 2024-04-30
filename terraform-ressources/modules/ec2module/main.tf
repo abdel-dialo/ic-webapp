@@ -1,54 +1,29 @@
-
-data "aws_ami" "my_aws_ami" {
-  most_recent = true
-  owners      = ["099720109477"] # Canonical
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
-  }
-}
-
 resource "aws_instance" "my_ec2_instance" {
-  ami             = data.aws_ami.my_aws_ami.id
+  ami             = "ami-0aedf6b1cb669b4c7"
   instance_type   = var.instancetype
   key_name        = "jenkins"
-  tags            = var.env_tag
-  security_groups = ["${aws_security_group.ssh_http_https.name}"]
-
-  connection {
-    type        = "ssh"
-    user = "ubuntu"
-    private_key = file(var.ssh_key_file)
-    host        = self.public_ip
-    timeout = "1m"
-  }
-
- 
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt update -y",
-      "sudo curl -fsSL https://get.docker.com -o get-docker.sh",
-      "sudo sh get-docker.sh",
-      "sudo service docker start",
-      "sudo chkconfig docker on",
-      "sudo usermod -aG docker ubuntu",
-      "sudo docker --version",
-      "exit"
-    ]
-  }
+  tags            = {
+                     Name= var.env_tag
+                     } 
+  security_groups = ["${aws_security_group.ic_ssh_http_traffic.name}"]
 
 }
 
-resource "aws_security_group" "ssh_http_https" {
+resource "aws_security_group" "ic_ssh_http_traffic" {
   name        = var.sg_name
-  description = "Allow HTTPS and HTTP inbound traffic"
+  description = "Allow ic_webapp odoo and pgadmin inbound traffic"
 
   ingress {
-    description = "HTTP trafic"
-    from_port   = 443
-    to_port     = 443
+    description = "ODOO traffic"
+    from_port   = 8069
+    to_port     = 8069
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    description = "ic-webapp traffic"
+    from_port   = 8000
+    to_port     = 8000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -61,9 +36,9 @@ resource "aws_security_group" "ssh_http_https" {
   }
 
   ingress {
-    description = "HTTPS trafic"
-    from_port   = 80
-    to_port     = 80
+    description = "PGADMIN traffic"
+    from_port   = 5050
+    to_port     = 5050
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -81,9 +56,12 @@ resource "aws_eip" "my_eip" {
   instance = aws_instance.my_ec2_instance.id
   domain   = "vpc"
   provisioner "local-exec" {
-    command = "echo PUBLIC_IP: ${self.public_ip}  > infos_ec2.txt"
+    command = "echo ${var.url}: ${self.public_ip}  >> server_ip.txt"
   }
+  
 }
+  
+
 
 
 

@@ -2,10 +2,10 @@
 # defaults file for ic-webapp
 ic_webapp_network: ic_network_webapp
 ic_webapp_container_name: ic-webapp
-ic_webapp_image: {{ docker_id}}/ic-webapp:v1
+ic_webapp_image: "{{docker_id}}/ic-webapp:v1.0"
 ic_webapp_port: 8000
-odoo_url: http://{odoo_host}:8069
-pgdmin_url: http://{pgadmin_host}:5050
+odoo_url: "http://{{odoo_host}}:8069"
+pgdmin_url: "http://{{pgadmin_host}}:5050"
 docker_id: ada2019
 
        

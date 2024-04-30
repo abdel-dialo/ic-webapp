@@ -63,6 +63,7 @@ pipeline {
               }
             }
         }
+        
         stage('destroy staging') {          
             steps {
               withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_access', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
@@ -91,7 +92,7 @@ pipeline {
                 terraform apply -auto-approve \
                   -var-file="env_prod.tfvars" \
                   -var  ssh_key_file="${SSH_PRIVATE_KEY}"
-                export PROD_SERVER=$(awk '/PUBLIC_IP/ {sub(/^.* *PUBLIC_IP/,""); print $2}' infos_ec2.txt)
+                export PROD_SERVER=$(awk '/PUBLIC_IP/ {sub(/^.* *PUBLIC_IP/,""); print $2}' server_ec2.txt)
                 '''
                 }
               }

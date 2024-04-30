@@ -1,4 +1,6 @@
-env_tag={Name="ENV-STAGING"}
 instancetype = "t2.micro"
-sg_name="env_staging_sg"
+server_staging = ["ic_webapp_pgadmin_staging", "odoo_server_staging"]
+sg_staging = ["sg_staging_one", "sg_staging_two"]
+url_staging = ["odoo_host","pgadmin_host"]
+ssh_key_file= "./ansible.pem"
 

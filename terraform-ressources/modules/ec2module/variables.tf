@@ -14,10 +14,15 @@ variable "instancetype" {
 variable "ssh_key_file" {}
 
  variable "env_tag" {
-   type = map
+   type = string
    description = "instance tag"
    default = null
    }
+
+  variable "url" {
+  type    = string
+  default = null
+}
 
  
 

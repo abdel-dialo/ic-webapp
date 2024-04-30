@@ -5,14 +5,23 @@ default = "us-east-1"
 
 }
 
- variable "env_tag" {
-   type = map
-   description = "instance tag"
-   default = {
-    Name= "env"
-   }
 
- }
+variable "server_prod" {
+  type    = list(string)
+  default = null
+}
+
+variable "sg_prod" {
+  type    = list(string)
+  default = null
+}
+
+variable "url_prod" {
+  type    = list(string)
+  default = null
+}
+
+
 
  variable "ssh_key_file" {}
 
@@ -22,11 +31,6 @@ variable "instancetype" {
  default= "t2.nano"
  }
 
- variable "sg_name" {
- type = string
- description = "ec2 security group name"
- default= null
- }
 
  
 

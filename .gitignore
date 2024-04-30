@@ -5,3 +5,5 @@
 *terraform.tfstate.backup
 *terraform.tfvars
 *.terraform
+*{} errored.tfstate
+*server_ip.txt

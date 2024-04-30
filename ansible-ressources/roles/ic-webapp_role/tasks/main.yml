@@ -1,9 +1,8 @@
 ---
 # tasks file for ic-webapp
 - name: "create ic_webpp network"
-  docker_network: 
+  docker_network:
     name: "{{ ic_webapp_network }}"
-
 - name: "Launch ic_webapp container"
   docker_container: 
     name: "{{ ic_webapp_container_name }}"
@@ -11,8 +10,8 @@
     ports: 
       -  "{{ ic_webapp_port}}:8080"
     env: 
-      ODOO_URL: {{ odoo_url }}
-      PGADMIN_URL: {{ pgdmin_url }}
+      ODOO_URL: "{{ odoo_url }}"
+      PGADMIN_URL: "{{ pgdmin_url }}"
     networks:
       - name: "{{ ic_webapp_network }}"
        

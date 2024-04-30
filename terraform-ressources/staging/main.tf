@@ -3,11 +3,13 @@ provider "aws" {
 }
 
 module "ec2_staging" {
+    count = 2
     source = "../modules/ec2module"
     instancetype = var.instancetype
-    env_tag = var.env_tag
+    env_tag = var.server_staging[count.index]
     ssh_key_file= var.ssh_key_file
-    sg_name= var.sg_name
+    sg_name= var.sg_staging[count.index]
+    url = var.url_staging[count.index]
 
 }
 

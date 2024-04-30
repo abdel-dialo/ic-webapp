@@ -3,11 +3,13 @@ provider "aws" {
   }
 
 module "ec2_prod" {
+    count = 2
     source = "../modules/ec2module"
     instancetype = var.instancetype
-    env_tag = var.env_tag
+    env_tag = var.server_prod[count.index]
     ssh_key_file= var.ssh_key_file
-    sg_name= var.sg_name
+    sg_name= var.sg_prod[count.index]
+    url = var.url_prod[count.index]
 
 }
 
