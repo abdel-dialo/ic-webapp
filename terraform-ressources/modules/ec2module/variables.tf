@@ -11,7 +11,6 @@ variable "instancetype" {
  default= null
  }
 
-variable "ssh_key_file" {}
 
  variable "env_tag" {
    type = string

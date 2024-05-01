@@ -19,9 +19,6 @@ variable "url_staging" {
   default = null
 }
 
- 
-
- variable "ssh_key_file" {}
 
 variable "instancetype" {
  type = string

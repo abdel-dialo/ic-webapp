@@ -22,9 +22,6 @@ variable "url_prod" {
 }
 
 
-
- variable "ssh_key_file" {}
-
 variable "instancetype" {
  type = string
  description = "aws instance type"
