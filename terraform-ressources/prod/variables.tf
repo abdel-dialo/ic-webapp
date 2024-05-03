@@ -1,7 +1,7 @@
 
-variable  "AWS_REGION" {
-type = string
-default = "us-east-1"
+variable "AWS_REGION" {
+  type    = string
+  default = "us-east-1"
 
 }
 
@@ -23,11 +23,11 @@ variable "url_prod" {
 
 
 variable "instancetype" {
- type = string
- description = "aws instance type"
- default= "t2.nano"
- }
+  type        = string
+  description = "aws instance type"
+  default     = "t2.nano"
+}
 
 
- 
+
 

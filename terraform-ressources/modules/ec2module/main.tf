@@ -1,10 +1,10 @@
 resource "aws_instance" "my_ec2_instance" {
-  ami             = "ami-0aedf6b1cb669b4c7"
-  instance_type   = var.instancetype
-  key_name        = "jenkins"
-  tags            = {
-                     Name= var.env_tag
-                     } 
+  ami           = "ami-0aedf6b1cb669b4c7"
+  instance_type = var.instancetype
+  key_name      = "jenkins"
+  tags = {
+    Name = var.env_tag
+  }
   security_groups = ["${aws_security_group.ic_ssh_http_traffic.name}"]
 
 }
@@ -58,9 +58,9 @@ resource "aws_eip" "my_eip" {
   provisioner "local-exec" {
     command = "echo ${var.url}: ${self.public_ip}  >> server_ip.txt"
   }
-  
+
 }
-  
+
 
 
 
