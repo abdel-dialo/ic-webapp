@@ -5,7 +5,7 @@ pipeline {
 
     environment {
         IMAGE_NAME="ic-webapp"
-        CONTAINER_NAME="test-ic-webapp"
+        CONTAINER_NAME="ic-webapp"
         TAG_NAME="v1.0"
         DOCKERHUB_ID="ada2019"
         DOCKERHUB_PASSWORD=credentials('DOCKERHUB_PW')
