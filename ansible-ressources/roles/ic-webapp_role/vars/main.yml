@@ -1,0 +1,5 @@
+---
+# vars file for ic-webapp
+odoo_host: 3.80.62.232
+pgadmin_host: 3.85.63.105
+

@@ -1,0 +1,11 @@
+---
+# defaults file for odoo_role
+odoo_service_name: odoo
+odoo_container_name: odoo
+odoo_web_data_volume: odoo_web_data 
+odoo_config_folder: /odoo/config
+odoo_addons_folder: /odoo/addons
+odoo_network: ic_network_odoo
+postgres_service_name: postgres
+postgres_container_name: postgres
+pgdata_volume: odoo-db-data

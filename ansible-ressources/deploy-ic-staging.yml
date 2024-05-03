@@ -1,0 +1,24 @@
+---
+- name: "install docker"
+  hosts: staging
+  become: true
+  roles:
+    - { role: install_docker_role/ }
+
+- name: "deploy ic-webapp"
+  hosts: ic_webapp_pgadmin_staging
+  become: true
+  roles:
+    - { role: ic-webapp_role }
+
+- name: "deploy pgadmin"
+  hosts: ic_webapp_pgadmin_staging
+  become: true
+  roles:
+    - { role: pgadmin_role }
+
+- name: "deploy odoo"
+  hosts: odoo_staging
+  become: true
+  roles:
+    - { role: odoo_role }

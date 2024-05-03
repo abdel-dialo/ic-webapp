@@ -1,0 +1,34 @@
+---
+- name: Download pip script
+  get_url:
+      url: https://bootstrap.pypa.io/pip/2.7/get-pip.py
+      dest: /tmp/get-pip.py
+- name: Install python-pip
+  ansible.builtin.command: python2.7 /tmp/get-pip.py
+
+- name: Install docker python
+  pip: name=docker-py
+
+- name: dowload docker script install
+  ansible.builtin.command: curl -fsSL https://get.docker.com -o install-docker.sh
+
+- name: install docker
+  ansible.builtin.command: sudo sh install-docker.sh
+  become: true
+  notify: start_service_docker
+
+- name: Force notified handlers to run at this point
+  ansible.builtin.meta: flush_handlers
+
+- name: Add user to docker group
+  ansible.builtin.user:
+    name: "{{system_user}}"
+    groups: docker
+    append: true
+
+- name: Reset ssh connection to allow user changes to affect ansible user
+  ansible.builtin.meta:
+    reset_connection
+
+- name: Force notified handlers to run at this point
+  ansible.builtin.meta: flush_handlers

@@ -1,0 +1,8 @@
+---
+# vars file for webapp
+external_port: 80
+internal_port: 80
+system_user: centos
+template_file: index.html.j2
+ip_prod: 23.22.203.180
+ip_staging: 54.175.38.112
