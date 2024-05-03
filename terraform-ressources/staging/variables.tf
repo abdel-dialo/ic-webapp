@@ -19,14 +19,8 @@ variable "url_staging" {
   default = null
 }
 
-
 variable "instancetype" {
   type        = string
   description = "aws instance type"
   default     = "t2.nano"
 }
-
-
-
-
-

@@ -27,7 +27,3 @@ variable "instancetype" {
   description = "aws instance type"
   default     = "t2.nano"
 }
-
-
-
-
