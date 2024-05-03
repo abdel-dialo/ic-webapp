@@ -7,3 +7,4 @@
 *.terraform
 *{} errored.tfstate
 *server_ip.txt
+vault.key
