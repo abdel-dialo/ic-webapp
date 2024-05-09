@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ic-webapp
+  labels:
+    app: ic-webapp
+  namespace: ic-group-intranet
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ic-webapp
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ic-webapp
+        tier: frontend
+    spec:
+      containers:
+        - image: ada2019/ic-webapp:v1.0
+          name: ic-webapp
+          env:
+            - name: ODOO_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ic-webapp-config
+                  key: ODOO_URL
+            - name: PGADMIN_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ic-webapp-config
+                  key: PGADMIN_URL
+          ports:
+            - containerPort: 8080
+              name: ic-webapp

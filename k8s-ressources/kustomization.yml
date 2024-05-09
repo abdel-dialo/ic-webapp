@@ -1,0 +1,21 @@
+resources:
+  - ic-group-intranet-app-namespace.yml
+  - ic-webapp-configMap.yml
+  - service-nodePort-ic-webapp.yml
+  - ic-webapp-deployment.yml
+  - postgres-secret.yml
+  - service-clusterIP-postgres.yml
+  - postgres-pv.yml
+  - postgres-pvc.yml
+  - postgres-deployment.yml
+  - odoo-secret.yml 
+  - service-nodePort-odoo.yml
+  - odoo-pv.yml
+  - odoo-pvc.yml
+  - odoo-deployment.yml
+  - pgadmin-secret.yml
+  - pgadmin-configMap.yml
+  - service-nodePort-pgadmin.yml
+  - pgadmin-pv.yml
+  - pgadmin-pvc.yml
+  - pgadmin-deployment.yml

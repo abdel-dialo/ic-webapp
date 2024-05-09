@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odoo
+  labels:
+    app: odoo
+  namespace: ic-group-intranet
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: odoo
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: odoo
+    spec:
+      containers:
+        - image: odoo:13.0
+          name: odoo
+          env:
+            - name: HOST
+              value: postgres
+            - name: USER
+              value: odoo
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: odoo-pass
+                  key: PASSWORD
+          ports:
+            - containerPort: 8069
+              name: odoo
+          volumeMounts:
+            - name: odoo-persistent-storage
+              mountPath: /etc/odoo
+            - name: odoo-lib-persistent-storage
+              mountPath: /var/lib/odoo
+            - name: extra-addons-odoo-persistent-storage
+              mountPath: /mnt/extra-addons
+      volumes:
+        - name: odoo-persistent-storage
+          persistentVolumeClaim:
+            claimName: odoo-persistent-storage
+        - name: extra-addons-odoo-persistent-storage
+          hostPath:
+            path: /odoo-data/addons
+        - name: odoo-lib-persistent-storage
+          hostPath:
+            path: /odoo-data/lib
+

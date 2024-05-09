@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ic-webapp
+  labels:
+    app: ic-webapp
+  namespace: ic-group-intranet
+spec:
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+    nodePort: 30080
+  selector:
+    app: ic-webapp
+    tier: frontend
+  type: NodePort
