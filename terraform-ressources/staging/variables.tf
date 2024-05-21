@@ -18,8 +18,6 @@ variable "url_staging" {
   type    = list(string)
   default = null
 }
-
-
 variable "instancetype" {
   type        = string
   description = "aws instance type"
