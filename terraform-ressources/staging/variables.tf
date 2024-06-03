@@ -14,7 +14,7 @@ variable "sg_staging" {
   default = null
 }
 
-variable "url_staging" {
+variable "host_staging" {
   type    = list(string)
   default = null
 }

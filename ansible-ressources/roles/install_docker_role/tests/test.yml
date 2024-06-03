@@ -1,14 +1,4 @@
 ---
-- hosts: prod
-  remote_user: "{{system_user}}"
-  vars_files: ../vars/main.yml
-  tasks:
-    - name: Test deploy in staging 
-      uri:
-        url: http://{{ip_staging}}
-        status_code: 200
-    - name: Test deploy in prod
-      uri:
-        url: http://{{ip_prod}}
-        status_code: 200
-
+- hosts: localhost
+  roles:
+    - install_docker_role

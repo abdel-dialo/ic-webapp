@@ -18,7 +18,7 @@ variable "env_tag" {
   default     = null
 }
 
-variable "url" {
+variable "host" {
   type    = string
   default = null
 }

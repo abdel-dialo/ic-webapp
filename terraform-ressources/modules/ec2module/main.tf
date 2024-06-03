@@ -56,7 +56,7 @@ resource "aws_eip" "my_eip" {
   instance = aws_instance.my_ec2_instance.id
   domain   = "vpc"
   provisioner "local-exec" {
-    command = "echo ${var.url}: ${self.public_ip}  >> server_ip.txt"
+    command = "echo ${var.host}: ${self.public_ip}  >> server_ip.txt"
   }
 
 }

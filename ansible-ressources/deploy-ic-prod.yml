@@ -3,7 +3,7 @@
   hosts: prod
   become: true
   roles:
-    - { role: install_docker_role/ }
+    - { role: install_docker_role }
 
 - name: "deploy ic-webapp"
   hosts: ic_webapp_pgadmin_prod

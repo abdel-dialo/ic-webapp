@@ -8,7 +8,7 @@ module "ec2_staging" {
   instancetype = var.instancetype
   env_tag      = var.server_staging[count.index]
   sg_name      = var.sg_staging[count.index]
-  url          = var.url_staging[count.index]
+  host          = var.host_staging[count.index]
 
 }
 

@@ -8,5 +8,5 @@ pgadmin_data_volume: pgdmin_data
 pgadmin_network: ic_group_network
 pgadmin_init_config_name: docker_postgres_name
 pgadmin_init_config_group: docker_postgres_group
-pgadmin_init_config_user: postgres
-pgadmin_init_config_host: odoo_user             
+pgadmin_init_config_user: odoo_user
+pgadmin_init_config_host: postgres         

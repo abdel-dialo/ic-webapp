@@ -16,7 +16,7 @@ variable "sg_prod" {
   default = null
 }
 
-variable "url_prod" {
+variable "host_prod" {
   type    = list(string)
   default = null
 }

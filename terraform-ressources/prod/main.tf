@@ -8,7 +8,7 @@ module "ec2_prod" {
   instancetype = var.instancetype
   env_tag      = var.server_prod[count.index]
   sg_name      = var.sg_prod[count.index]
-  url          = var.url_prod[count.index]
+  host          = var.host_prod[count.index]
 
 }
 
