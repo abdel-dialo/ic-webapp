@@ -171,7 +171,7 @@ J'ai crée quatre rôles:
       - _pgadmin_host_: 3.85.63.105 #Adresse IP de l'hôte hebergeant l'application _pgadmin_host_
 
 
-- odoo_role: Ce rôle permet de déployer l'application _odoo_ à partir du fichier docker-compose-odoo.yml généré à partir du template docker-compose-odoo.yml.j2
+- **odoo_role**: Ce rôle permet de déployer l'application _odoo_ à partir du fichier docker-compose-odoo.yml généré à partir du template docker-compose-odoo.yml.j2
 
   - Variables: _default/main.yml_
     - _odoo_service_name_: odoo #nom correspondant au service odoo dans le fichier docker-compose-odoo.yml
@@ -185,7 +185,7 @@ J'ai crée quatre rôles:
     - _pgdata_volume_: odoo-db-data #point de montage du volume /var/lib/postgresql/data/pgdata sur la machine hôte
    
    
- - pgadmin_role:
+ - **pgadmin_role**:
   Ce rôle permet de déployer l'application _pgdmin_ à partir du fichier docker-compose-pgadmin.yml généré à partir du template docker-compose-pgadmin.yml.j2
     - Variables: _default/main.yml_
       - _pgadmin_service_name_: pgadmin #nom correspondant au service _pgadmin_ dans le fichier docker-compose-pgadmin.yml
@@ -264,7 +264,7 @@ Ce fichier sera monté sur un volume type "bind mount" sur le conteneur _(/pgadm
 
 ## Release image
   Une fois que le job de test d'acceptation est passe, dans le job _Release image_ on pousse l'image dans le registre Dockerhub
-   ![alt text](images\image-dockerhub.png)
+   ![alt text](images/image-dockerhub.png)
    
 
 ## Deploy staging
@@ -320,7 +320,7 @@ Ce fichier sera monté sur un volume type "bind mount" sur le conteneur _(/pgadm
       Vérifie que le groupe d'hôtes _prod_ est joignable.
   - _Check ansible playbook syntax_:
 
-      Vérifie la syntaxe du playbook _deploy-ic-prod.yml_
+      Valide la syntaxe du playbook _deploy-ic-prod.yml_
 
   - _Deploy app on prod with ansible_:
 
