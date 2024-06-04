@@ -37,7 +37,7 @@ Ci-dessous un aperçu du site vitrine attendu.
 **NB :** L’image** créée devra permettre de lancer un container permettant d’héberger ce site web et ayant les liens adéquats permettant d’accéder à nos applications internes 
 
 
-# 2 - Pre-requis
+# 2 - Prérequis
   Avoir Jenkins d'installé sur une machine ou un conteneur docker.
   Dans le cadre ce projet le serveur Jenkins est un conteneur docker qui s'exécute sur une instance ec2 dans AWS
   ![alt text](images/image-15.png)
@@ -73,22 +73,38 @@ Ci-dessous un aperçu du site vitrine attendu.
 - Fichier _README.md_
 
 # 3 - Installation des plugins jenkins et configuration
+
 - HTTP request
+
+ ![alt text](images/http-request-plugin.png)
+
 - docker-build-step
+
+![alt text](images/docker-build-plugin.png)
+
   - Configuration 
     - Aller sur _Manage jenkins_ → _Configure system_ → _Docker Builder_ → renseigner la socket unix 
       (unix:///var/run/docker.sock)
     - Tester la connectivité
+
 - Terraform plugin
+
+![alt text](images/terraform-request-plugin.png)
+
   - Configuration
     - Télécharger le binaire Terraform sur le conteneur Jenkins
+
      ![alt text](images/image-16.png)
      ![alt text](images/image-17.png)
+
     - Aller sur _Manage jenkins_ → _Global Tool configuration_ → _Terraform_ → _Add terraform_
     - Renseigner le chemin du binaire terraform sur le conteneur Jenkins
+
      ![alt text](images/image-18.png)
+
 - Ansible
   - Installer Ansible sur le conteneur Jenkins 
+
     ![alt text](images/image-19.png)
 
 - Configuration du Webhook
@@ -150,7 +166,9 @@ Ci-dessous un aperçu du site vitrine attendu.
   ![alt text](images/image-t2.png)
 
 # 6 - Rôle Ansible
+
 J'ai crée quatre rôles:
+
 - **install_docker_role**: Ce rôle permet d'installer Docker sur les hôtes cibles avant le déploiement des applications sur ces derniers.
   
    - Les variables utilisées dans ce rôle sont définies dans le fichier vars/main.yml:
@@ -158,6 +176,7 @@ J'ai crée quatre rôles:
       - _internal_port, external_port_ : port interne et port externe du conteneur Apache.
 
 - **ic-webapp_role**: Ce rôle permet de déployer l'application ic-webapp 
+
    - Variables: _default/main.yml_
      - _ic_webapp_network_: ic_network_webapp  #reseau du conteneur de l'application
       - _ic_webapp_container_name_: ic-webapp  #nom du conteneur de l'application
@@ -166,6 +185,7 @@ J'ai crée quatre rôles:
       - _odoo_url_: "http://{{odoo_host}}:8069" #Url de l'hôte hébergeant l'application _odoo_
       - _pgdmin_url_: "http://{{pgadmin_host}}:5050" #Url de l'hôte hébergeant l'application _pgadmin_
       - _docker_id_: ada2019 #L'identifiant dockerhub
+
    - Variables: _vars/main.yml_
       - _odoo_host_: 3.80.62.232  #Adresse IP de l'hôte hebergeant l'application _odoo_
       - _pgadmin_host_: 3.85.63.105 #Adresse IP de l'hôte hebergeant l'application _pgadmin_host_
@@ -186,6 +206,7 @@ J'ai crée quatre rôles:
    
    
  - **pgadmin_role**:
+
   Ce rôle permet de déployer l'application _pgdmin_ à partir du fichier docker-compose-pgadmin.yml généré à partir du template docker-compose-pgadmin.yml.j2
     - Variables: _default/main.yml_
       - _pgadmin_service_name_: pgadmin #nom correspondant au service _pgadmin_ dans le fichier docker-compose-pgadmin.yml
@@ -222,17 +243,20 @@ Ce fichier sera monté sur un volume type "bind mount" sur le conteneur _(/pgadm
      ![alt text](images/build-param.png)
 
 # 8 - Création du pipeline CI/CD
+
   ![alt text](images/image-jk-pipeline.png)
+
   Pour mettre en place le CI/CD j'ai créé un fichier _Jenkinsfile_ à la racine du projet.
   Le CI/CD sera constitué des étapes suivantes:
+
   - **Environnement**: qui contient les variables d'environnements   
     suivant:
-     - IMAGE_NAME: nom de l'image docker qui pourra être surchargé lors du build
-     - TAG_NAME: tag de l'image docker qui pourra être surchargé lors du build
-     - DOCKERHUB_ID: _id_ du Dockerhub
-     - DOCKERHUB_PASSWORD: variable type _secret text_ qui contient le mot de passe du Dockerhub.
-     - VAULT_KEY: variable type _secret text_ qui contient le mot de passe vault.
-     - SSH_PRIVATE_KEY:variable de type _secret file_ contenant la paire de clé de l'instance ec2.
+     - **IMAGE_NAME**: nom de l'image docker qui pourra être surchargé lors du build
+     - **TAG_NAME**: tag de l'image docker qui pourra être surchargé lors du build
+     - **DOCKERHUB_ID**: _id_ du Dockerhub
+     - **DOCKERHUB_PASSWORD**: variable type _secret text_ qui contient le mot de passe du Dockerhub.
+     - **VAULT_KEY**: variable type _secret text_ qui contient le mot de passe vault.
+     - **SSH_PRIVATE_KEY**:variable de type _secret file_ contenant la paire de clé de l'instance ec2.
 
      ![alt text](images/image-jk-crt.png)
 
