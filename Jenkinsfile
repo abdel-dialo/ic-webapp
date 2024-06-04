@@ -4,9 +4,9 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME="ic-webapp"
-        CONTAINER_NAME="test-ic-webapp"
-        TAG_NAME="v1.0"
+        IMAGE_NAME="${IMAGE_NAME_PARAM}"
+        CONTAINER_NAME="${CONTAINER_NAME_PARAM}"
+        TAG_NAME="${TAG_NAME_PARAM}"
         DOCKERHUB_ID="ada2019"
         DOCKERHUB_PASSWORD=credentials('DOCKERHUB_PW')
         SSH_PRIVATE_KEY=credentials('aws_key_paire')
@@ -17,6 +17,7 @@ pipeline {
             
             steps {
                 sh '''
+                  export TAG_NAME=$(awk '/version/ {sub(/^.* *version/,""); print $2}' releases.txt)
                   docker build -t  $DOCKERHUB_ID/$IMAGE_NAME:$TAG_NAME .
                   docker rm -f  $CONTAINER_NAME
                   '''
