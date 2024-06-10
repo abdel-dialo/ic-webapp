@@ -75,11 +75,7 @@ pipeline {
         }
         
         stage('deploy staging ') {  
-          agent { 
-                    docker { 
-                            image 'alpinelinux/ansible'  
-                    } 
-                } 
+          
           stages {  
             
         stage('Ping staging env hosts') {          
