@@ -1,16 +1,14 @@
 ---
 - name: Download pip script
   get_url:
-      url: https://bootstrap.pypa.io/pip/3.6/get-pip.py
+      url: https://bootstrap.pypa.io/pip/2.7/get-pip.py
       dest: /tmp/get-pip.py
 - name: Install python-pip
-  command: python3 /tmp/get-pip.py
-  ignore_errors: yes
+  command: python2.7 /tmp/get-pip.py
 
 - name: Install docker python
-  pip:
-    name: docker-py
-    executable: /usr/local/bin/pip3
+  pip: name=docker-py
+
 - name: dowload docker script install
   command: curl -fsSL https://get.docker.com -o install-docker.sh
 
