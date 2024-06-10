@@ -9,7 +9,7 @@ pipeline {
         TAG_NAME="${TAG_NAME_PARAM}"
         DOCKERHUB_ID="ada2019"
         DOCKERHUB_PASSWORD=credentials('DOCKERHUB_PW')
-        SSH_PRIVATE_KEY=credentials('aws_key_paire')
+        SSH_PRIVATE_KEY=credentials('aws_ec2_key_paire')
         VAULT_KEY=credentials('vault_key')   
     }
     stages {
@@ -49,10 +49,12 @@ pipeline {
                 '''
             }
         }
-        
-        stage('deploy staging ') {  
-          stages {  
-            stage ('Staging -build infra on aws with terraform') {      
+        stage ('Staging -build infra on aws with terraform') { 
+          agent { 
+                    docker { 
+                            image 'jenkins/jnlp-agent-terraform'  
+                    } 
+                }     
             steps {
               withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_access', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                 dir('terraform-ressources/staging') {
@@ -64,50 +66,56 @@ pipeline {
                   -var-file="env_staging.tfvars" 
                 terraform apply -auto-approve \
                   -var-file="env_staging.tfvars" 
-                echo "clean host_vars file"
-                cat /dev/null > ../../ansible-ressources/host_vars/odoo_server_staging.yml
-                cat /dev/null > ../../ansible-ressources/host_vars/ic_webapp_pgadmin_server_staging.yml
-                echo "clean ic-webapp vars role"
-                cat /dev/null > ../../ansible-ressources/roles/ic-webapp_role/vars/main.yml
-                echo "init host_vars file"
-                echo "ansible_host: $(awk '/pgadmin_host/ {sub(/^.* *pgadmin_host/,""); print $2}' server_ip.txt)" > ../../ansible-ressources/host_vars/ic_webapp_pgadmin_server_staging.yml
-                echo "ansible_host: $(awk '/odoo_host/ {sub(/^.* *odoo_host/,""); print $2}' server_ip.txt)" > ../../ansible-ressources/host_vars/odoo_server_staging.yml
-                echo "init ic-webapp vars role"
-                echo  "pgadmin_host: $(awk '/pgadmin_host/ {sub(/^.* *pgadmin_host/,""); print $2}' server_ip.txt)" >> ../../ansible-ressources/roles/ic-webapp_role/vars/main.yml
-                echo  "odoo_host: $(awk '/odoo_host/ {sub(/^.* *odoo_host/,""); print $2}' server_ip.txt)" >>  ../../ansible-ressources/roles/ic-webapp_role/vars/main.yml
-                cat ../../ansible-ressources/roles/ic-webapp_role/vars/main.yml 
+                
                 sleep 60
                 '''
                 }
               }
             }
         }
+        
+        stage('deploy staging ') {  
+          agent { 
+                    docker { 
+                            image 'alpinelinux/ansible'  
+                    } 
+                } 
+          stages {  
+            
         stage('Ping staging env hosts') {          
             steps {
               
                 dir('ansible-ressources') {
                 sh '''
+                echo "clean host_vars file"
+                cat /dev/null > host_vars/odoo_server_staging.yml
+                cat /dev/null > host_vars/ic_webapp_pgadmin_server_staging.yml
+                echo "clean ic-webapp vars role"
+                cat /dev/null > roles/ic-webapp_role/vars/main.yml
+                echo "init host_vars file"
+                echo "ansible_host: $(awk '/pgadmin_host/ {sub(/^.* *pgadmin_host/,""); print $2}' ../terraform-ressources/staging/server_ip.txt)" > host_vars/ic_webapp_pgadmin_server_staging.yml
+                echo "ansible_host: $(awk '/odoo_host/ {sub(/^.* *odoo_host/,""); print $2}' ../terraform-ressources/staging/server_ip.txt)" > host_vars/odoo_server_staging.yml
+                echo "init ic-webapp vars role"
+                echo  "pgadmin_host: $(awk '/pgadmin_host/ {sub(/^.* *pgadmin_host/,""); print $2}' ../terraform-ressources/staging/server_ip.txt)" >> roles/ic-webapp_role/vars/main.yml
+                echo  "odoo_host: $(awk '/odoo_host/ {sub(/^.* *odoo_host/,""); print $2}' ../terraform-ressources/staging/server_ip.txt)" >>  roles/ic-webapp_role/vars/main.yml
+                cat roles/ic-webapp_role/vars/main.yml 
+                 #apk update
+                 #apk add sshpass
+                 #sshpass -h
                  ansible staging -m ping  --extra-vars ssh_private_key="${SSH_PRIVATE_KEY}"
                  '''
                   }
              }
         }
-        stage('check ansible playbook syntax') {          
-            steps {
-              
-                dir('ansible-ressources') {
-                sh '''
-                 ansible-lint deploy-ic-staging.yml  || echo passing linter
-                 '''
-                  }
-             }
-        }
+        
         stage('deploy app on staging with ansible') {          
             steps {
               
                 dir('ansible-ressources') {
                 sh '''
+                 
                  ansible-playbook deploy-ic-staging.yml --vault-password-file "${VAULT_KEY}" --extra-vars ssh_private_key="${SSH_PRIVATE_KEY}"
+                 
                  '''
                   }
              }
@@ -129,13 +137,12 @@ pipeline {
               }
             }
         }
-
-        stage('deploy prod and test') {
-          when {
-           expression { GIT_BRANCH == 'origin/main' }
-           }
-           stages {
-            stage ('Prod -build infra on aws with terraform'){
+          stage ('Prod -build infra on aws with terraform'){
+            agent { 
+                    docker { 
+                            image 'jenkins/jnlp-agent-terraform'  
+                    } 
+                } 
              steps {
               withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_access', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                 dir ('terraform-ressources/prod') {
@@ -166,6 +173,17 @@ pipeline {
         
             }
         }    
+        stage('deploy prod and test') {
+          when {
+           expression { GIT_BRANCH == 'origin/main' }
+           }
+           agent { 
+                    docker { 
+                            image 'alpinelinux/ansible'  
+                    } 
+                } 
+           stages {
+            
        
        stage('Ping prod env hosts') {          
             steps {
