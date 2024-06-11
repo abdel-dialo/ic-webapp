@@ -78,29 +78,10 @@ Ci-dessous un aperçu du site vitrine attendu.
 
  ![alt text](images/http-request-plugin.png)
 
-- docker-build-step
 
-![alt text](images/docker-build-plugin.png)
+- Docker pipeline
 
-  - Configuration 
-    - Aller sur _Manage jenkins_ → _Configure system_ → _Docker Builder_ → renseigner la socket unix 
-      (unix:///var/run/docker.sock)
-    - Tester la connectivité
-
-- Terraform plugin
-
-![alt text](images/terraform-request-plugin.png)
-
-  - Configuration
-    - Télécharger le binaire Terraform sur le conteneur Jenkins
-
-     ![alt text](images/image-16.png)
-     ![alt text](images/image-17.png)
-
-    - Aller sur _Manage jenkins_ → _Global Tool configuration_ → _Terraform_ → _Add terraform_
-    - Renseigner le chemin du binaire terraform sur le conteneur Jenkins
-
-     ![alt text](images/image-18.png)
+   ![alt text](images/docker-pipeline.png)
 
 - Ansible
   - Installer Ansible sur le conteneur Jenkins 
@@ -265,17 +246,19 @@ Ce fichier sera monté sur un volume type "bind mount" sur le conteneur _(/pgadm
      - Test acceptation
      - Clear container
      - Release image
-     - Deploy staging 
-       -   Staging -build infra on aws with terraform
+     - Staging -build infra on aws with terraform
+     - Deploy staging and test 
        -   Ping staging env hosts
        - Check ansible playbook syntax
        - Deploy app on staging with ansible
+       - Test staging
      - Destroy staging
-     - Deploy prod and test
-       - Prod -build infra on aws with terraform
+     - Prod -build infra on aws with terraform
+     - Deploy prod and test   
        - Ping prod env hosts
        - Check ansible playbook syntax
        - Deploy app on prod with ansible  
+       - Test Prod
 
 ## Build
   Dans le job _Build_ on conteneurise l’application à partir du _Dockerfile_ 
