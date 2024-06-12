@@ -50,6 +50,9 @@ pipeline {
             }
         }
         stage ('Staging -build infra on aws with terraform') { 
+          when {
+            expression { GIT_BRANCH == 'origin/main' }
+           }
           agent { 
                     docker { 
                             image 'jenkins/jnlp-agent-terraform' 
@@ -76,7 +79,9 @@ pipeline {
         }
         
         stage('deploy staging and test ') {  
-          
+          when {
+            expression { GIT_BRANCH == 'origin/main' }
+           }     
       stages {        
                
         stage('Ping staging env hosts') {          
@@ -114,6 +119,7 @@ pipeline {
                 dir('ansible-ressources') {
                 sh '''         
                  ansible-playbook deploy-ic-staging.yml --vault-password-file "${VAULT_KEY}" --extra-vars ssh_private_key="${SSH_PRIVATE_KEY}"         
+                 sleep 60
                  '''
                   }
              }
@@ -135,7 +141,10 @@ pipeline {
           }
         }
 
-        stage('destroy staging') {          
+        stage('destroy staging') {  
+          when {
+            expression { GIT_BRANCH == 'origin/main' }
+           }        
            agent { 
                     docker { 
                             image 'jenkins/jnlp-agent-terraform'  
@@ -156,6 +165,9 @@ pipeline {
             }
         }
           stage ('Prod -build infra on aws with terraform'){
+            when {
+            expression { GIT_BRANCH == 'origin/main' }
+           }
              
             agent { 
                     docker { 
@@ -182,6 +194,9 @@ pipeline {
             }
         }    
       stage('deploy prod and test') {
+        when {
+            expression { GIT_BRANCH == 'origin/main' }
+           }
         
        stages {
              
@@ -220,6 +235,7 @@ pipeline {
                 dir('ansible-ressources') {
                 sh '''
                  ansible-playbook deploy-ic-prod.yml --vault-password-file "${VAULT_KEY}" --extra-vars ssh_private_key="${SSH_PRIVATE_KEY}"
+                 sleep 60
                  '''
                   }
              }
@@ -240,8 +256,6 @@ pipeline {
           }
         }
     }
-
-
     post {
     always {
       script {
