@@ -2,9 +2,12 @@ Prénom: Abdoul Gadirou
 
 Nom: DIALLO
 
-Promotion: BootCamp DevOps 17
+BootCamp DevOp:Promotion 17 de janvier à Mars 2024
+
 
 # Projet Final 
+
+  Ce projet est realisé dans le cadre du bootcamp devOps chez eazyTrainging.fr
 
 # 1 - Application :ic-webapp
 
@@ -187,8 +190,8 @@ J'ai crée quatre rôles:
    
    
  - **pgadmin_role**:
+ Ce rôle permet de déployer l'application _pgdmin_ à partir du fichier docker-compose-pgadmin.yml généré à partir du template docker-compose-pgadmin.yml.j2
 
-  Ce rôle permet de déployer l'application _pgdmin_ à partir du fichier docker-compose-pgadmin.yml généré à partir du template docker-compose-pgadmin.yml.j2
     - Variables: _default/main.yml_
       - _pgadmin_service_name_: pgadmin #nom correspondant au service _pgadmin_ dans le fichier docker-compose-pgadmin.yml
 
@@ -199,7 +202,7 @@ J'ai crée quatre rôles:
       - _pgadmin_data_volume_: pgdmin_data #point de montage du volume
       - _pgadmin_network_: ic_group_network #reseau dans lequel se trouve le conteneur 
 
-    - Variable permettant de configurer le fichier servers.json pour que le conteneur _pgadmin_ puisse se connecter à la base de données (postgres) _odoo_ au démarrage.
+    - Variable permettant de configurer le fichier servers.json pour que le conteneur _pgadmin_ puisse se connecter à la base de données (Postgres) _odoo_ au démarrage.
 Ce fichier sera monté sur un volume type "bind mount" sur le conteneur _(/pgadmin4/servers.json)_
       - _pgadmin_init_config_group_: docker_postgres_group
       - _pgadmin_init_config_user_: odoo_user   # nom d'utilisateur par default pour se connecter à la base de données postgres odoo
