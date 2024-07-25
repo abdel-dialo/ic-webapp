@@ -1,17 +1,11 @@
-Prénom: Abdoul Gadirou
-
-Nom: DIALLO
-
-BootCamp DevOp:Promotion 17 de janvier à Mars 2024
-
-
-# Projet Final 
+# Mise en place d'une pipeline DevOps
 
   Ce projet est realisé dans le cadre du bootcamp devOps chez eazyTrainging.fr
 
-# 1 - Application :ic-webapp
+## 1 - Application :ic-webapp
 
-La société **IC GROUP** dans laquelle vous travaillez en tant qu’ingénieur Devops souhaite mettre sur pied un site web vitrine devant permettre d’accéder à ses 02 applications phares qui sont :  
+**ic-webapp** est une application web vitrine qui permet d'accéder à deux applications interne de la sociète 
+ **IC GROUP**  qui sont :  
 
 1) Odoo et 
 1) pgAdmin 
@@ -31,7 +25,7 @@ Liens utiles :
 - Site officiel :[ https://www.pgadmin.org/ ](https://www.pgadmin.org/) 
 - Docker Hub officiel:[ https://hub.docker.com/r/dpage/pgadmin4/ ](https://hub.docker.com/r/dpage/pgadmin4/) 
 
-Le site web vitrine a été conçu par l’équipe de développeurs de l’entreprise et les fichiers y relatifs se trouvent dans le repo suscité : [ https://github.com/eazytraining/projet-fils-rouge.git ](https://github.com/eazytraining/projet-fils-rouge.git) . Il est de votre responsabilité de conteneuriser cette application tout en permettant la saisie des différentes URL des applications (Odoo et pgadmin) par le biais des variables d’environnement. 
+Le site web vitrine a été conçu par l’équipe de développeurs de l’entreprise et les fichiers y relatifs se trouvent dans le repo suscité : [ https://github.com/eazytraining/projet-fils-rouge.git ](https://github.com/eazytraining/projet-fils-rouge.git) . 
 
 Ci-dessous un aperçu du site vitrine attendu. 
 
@@ -39,6 +33,11 @@ Ci-dessous un aperçu du site vitrine attendu.
 
 **NB :** L’image** créée devra permettre de lancer un container permettant d’héberger ce site web et ayant les liens adéquats permettant d’accéder à nos applications internes 
 
+## Technologie
+  AWS cloud :Ec2
+  Terraform 
+  Ansible
+  Jenkins
 
 # 2 - Prérequis
   Avoir Jenkins d'installé sur une machine ou un conteneur docker.
@@ -47,7 +46,7 @@ Ci-dessous un aperçu du site vitrine attendu.
 
 # 2 - Objectif et livrable
 
-- Faire un fichier Dockerfile à partir duquel on va builder l'image qui permettra de déployer l'application ic-webapp
+- Conteneuriser l'application tout en permettant la saisie des différentes URL des applications (Odoo et pgadmin) par  le biais des variables d’environnement. 
 - Ecrire des modules Terraform pour provisionner l'infrastructure:
     ``` 
     **Serveur 2** : Applications web site vitrine + pgadmin4 (AWS, t2.micro)
@@ -62,7 +61,7 @@ Ci-dessous un aperçu du site vitrine attendu.
    - Tester l'image _ic-webapp_
    - Pousser l'image _ic-webapp_ dans le registre de conteneurs Dockerhub
    - Déployer les applications _ic-webapp_, _odoo_, _pgadmin_ grâce aux modules terraform et aux rôles ansibles sur :
-        - l'environnement de *staging* à chaque commit pour tester la non régression de l'application
+        - l'environnement de *staging*  pour tester la non régression de l'application
         - l'environnement de production une fois qu'on merge sur la branche *main*
 - Déployer les applications _ic-webapp_, _pgadmin_ et _odoo_ sur un cluster kubernetes.
  
@@ -127,7 +126,7 @@ Ci-dessous un aperçu du site vitrine attendu.
   - la ressource _eip_:
     
     Cette ressource permet d'attribuer une _ip_public_ fixe à l'ec2.
-    J'ai utilisé le provisionneur _local-exec_ pour ajouter l'adresse _ip_public_ de la machine dans le fichier _server_ip.txt_
+    j'ai utilisé le provisionneur _local-exec_ pour ajouter l'adresse _ip_public_ de la machine dans le fichier _server_ip.txt_
 
     
 ### *2* - Module racine (staging,prod)
@@ -141,10 +140,10 @@ Ci-dessous un aperçu du site vitrine attendu.
     **odoo_server_staging** : Application Odoo (AWS, t2.micro)
   ```
 
-  Pour créer deux instances pour chaque module racine j'ai utilisé les expressions de boucles terraform notamment _count_.
-    Pour rendre le déploiement dynamique j’ai créé le fichier tfvars pour surcharger les variables *env_tag*, *instancetype*, *sg_name* et *host* dans chaque module racine.
+  Pour créer deux instances pour chaque module racine je vais utiliser les expressions de boucles terraform notamment _count_.
+    Pour rendre le déploiement dynamique j'ai créé le fichier _tfvars_ pour surcharger les variables *env_tag*, *instancetype*, *sg_name* et *host* dans chaque module racine.
 
-  les fichiers _env_staging.tfstate_,_env_prod.tfstate_  contient respectivement l'état des infrastructures de _staging_ et _prod_.
+  Les fichiers _env_staging.tfstate_,_env_prod.tfstate_  contiennent respectivement l'état des infrastructures de _staging_ et _prod_.
     Ces fichiers sont conservés dans un Backend distant S3.
 
   ![alt text](images/image-t2.png)
@@ -211,7 +210,7 @@ Ce fichier sera monté sur un volume type "bind mount" sur le conteneur _(/pgadm
 # 7 - Conteneurisation de l’application web.
    - Dockerfile 
 
-     Pour l'écriture du Dockerfile j'ai suivi les étapes conteneurisation fourni par l'énoncé.
+     Pour l'écriture du Dockerfile j'ai suivi les étapes de conteneurisation fourni par l'énoncé.
      Afin de dynamiser la récupération des valeurs des variables d'environnement ODOO_URL et PGADMIN_URL
      j'ai rajouté dans le Dockerfile la récupération de la valeur de ces variables depuis le fichier _releases.txt_
 
