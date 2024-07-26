@@ -34,10 +34,11 @@ Ci-dessous un aperçu du site vitrine attendu.
 **NB :** L’image** créée devra permettre de lancer un container permettant d’héberger ce site web et ayant les liens adéquats permettant d’accéder à nos applications internes 
 
 ## Technologie
-  AWS cloud :Ec2
-  Terraform 
-  Ansible
-  Jenkins
+  AWS cloud (Ec2),
+  Terraform, 
+  Ansible,
+  Jenkins,
+  Kubernetes
 
 # 2 - Prérequis
   Avoir Jenkins d'installé sur une machine ou un conteneur docker.
@@ -50,6 +51,7 @@ Ci-dessous un aperçu du site vitrine attendu.
 - Ecrire des modules Terraform pour provisionner l'infrastructure:
     ``` 
     **Serveur 2** : Applications web site vitrine + pgadmin4 (AWS, t2.micro)
+
     **Serveur 3** : Application Odoo (AWS, t2.micro) 
     ```
   
@@ -72,28 +74,31 @@ Ci-dessous un aperçu du site vitrine attendu.
 - Rôles Ansibles
 - Fichier _Jenkinsfile_
 - Manifest Kubernetes
-- Fichier _README.md_
 
 # 3 - Installation des plugins jenkins et configuration
 
 - HTTP request
 
- ![alt text](images/http-request-plugin.png)
+Administrer Jenkins  →  Plugin 
+
+![alt text](images/http-request-plugin.png)
 
 
 - Docker pipeline
 
-   ![alt text](images/docker-pipeline.png)
+ Administrer Jenkins  →  Plugin
+
+![alt text](images/docker-pipeline.png)
 
 - Ansible
   - Installer Ansible sur le conteneur Jenkins 
 
-    ![alt text](images/image-19.png)
+![alt text](images/image-19.png)
 
 - Configuration du Webhook
   - Aller sur le _projet-fil-rouge_ dans github  → Settings  → Webhooks → Ajouter un webhooks en renseignant l'url du serveur Jenkins 
 
-  ![alt text](images/imagewebhook.png)
+![alt text](images/imagewebhook.png)
 
   - Aller sur le job du _projet-fil-rouge_ dans jenkins  → Configure  → Build Triggers
   → GitHub hook trigger for GITScm polling
