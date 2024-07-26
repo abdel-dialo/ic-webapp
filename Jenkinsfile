@@ -81,7 +81,13 @@ pipeline {
         stage('deploy staging and test ') {  
           when {
             expression { GIT_BRANCH == 'origin/main' }
-           }     
+           } 
+           agent { 
+                dockerfile {
+                    filename 'agent/Dockerfile.ansible'
+                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }    
       stages {        
                
         stage('Ping staging env hosts') {          
